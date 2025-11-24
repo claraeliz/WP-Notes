@@ -1,1 +1,65 @@
 # WP-Notes
+
+A WordPress plugin that adds **per-user, per-page sticky notes** 
+
+This plugin is built for personal productivity inside WordPress pages, useful for administrators, editors, and content builders.
+
+---
+
+## ✨ Features
+
+### 🔒 Per-User Notes
+Each user sees **only their own notes** on the frontend and in the backend.
+
+### 📄 Per-Page Notes
+Notes are attached to a specific page.  
+Visiting a different page = only notes created for that page will appear.
+
+### 🎯 Center-Anchored Positioning (No Drift)
+Notes are positioned using a **center-based virtual coordinate system**, meaning:
+
+- Zero drift on resize  
+- Zero drift on different monitors  
+- Zero drift on refresh  
+- Pixel-perfect consistency  
+
+### 🖱️ Draggable Notes
+Users can drag notes around freely.  
+Position is auto-saved via AJAX.
+
+### 🎨 Customizable
+You can set:
+
+- Note title  
+- Note content  
+- Note color  
+
+### 🔐 Visibility Controls
+For each note you can choose:
+
+- Private (default)
+- Public for all logged-in users
+- Shared with selected users only
+
+### ✔️ Backend Restrictions
+- Normal users can only edit their own notes.
+- They cannot see or modify notes created by others.
+
+### ✔️ Correct Post Counts
+The admin list shows:
+
+- **All (X)** = number of notes created by the logged-in user  
+- **Mine (X)** = same number  
+
+This prevents confusion since users only ever see their own notes.
+
+---
+
+## 📦 Installation
+
+1. Upload the plugin folder to: /wp-content/plugins/wp-notes ( or desired name )
+
+2. Activate the plugin in the **Plugins** menu.
+
+3. A new menu will appear:
+
