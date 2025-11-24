@@ -1,0 +1,37 @@
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+
+# Ignore IDE/project files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+
+# Ignore logs
+*.log
+
+
+# Ignore node modules (if ever used)
+node_modules/
+
+
+# Ignore build/output
+/dist/
+/build/
+
+
+# Ignore WordPress environment files
+wp-config.php
+wp-content/debug.log
+
+
+# Ignore plugin-specific temporary files
+*.tmp
+*.cache
+
+
+# Ignore README.md as requested
+README.md
