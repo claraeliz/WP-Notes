@@ -1,0 +1,31 @@
+#wpnp3-notes-wrapper{
+  position:absolute !important;
+  left:0; top:0;
+  width:0; height:0;
+  margin:0; padding:0;
+  pointer-events:none;
+  z-index:9999;
+}
+.wpnp3-sticky-note{
+  position:absolute !important;
+  width:220px; max-width:220px;
+  padding:10px 12px;
+  border-radius:6px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  cursor:default;
+  pointer-events:auto;
+  user-select:none;
+  z-index:9999;
+  background:#ffeb3b;
+}
+.wpnp3-draggable{ cursor:grab; }
+.wpnp3-sticky-note h4{
+  margin:0 0 6px 0;
+  font-size:14px;
+  font-weight:600;
+}
+.wpnp3-content{ font-size:14px; line-height:1.35; }
+
+@media (max-width:1200px){
+  #wpnp3-notes-wrapper{ display:none !important; }
+}
