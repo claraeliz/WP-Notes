@@ -10,6 +10,7 @@ if ( ! defined('ABSPATH') ) exit;
 
 class WPNP_Center {
     const CPT = 'wpnp_note3'; // NEW CPT + meta keys
+    const DEFAULT_COLOR = '#ffeb3b'; // Default note background color
 
     public function __construct() {
         add_action('init', [$this,'register_cpt']);
@@ -51,8 +52,12 @@ class WPNP_Center {
     }
 
     public function render_settings_box($post) {
+        if (!current_user_can('edit_post', $post->ID)) {
+            return;
+        }
+
         wp_nonce_field('wpnp3_save_meta','wpnp3_meta_nonce');
-        $color = get_post_meta($post->ID,'_wpnp3_color',true) ?: '#ffeb3b';
+        $color = get_post_meta($post->ID,'_wpnp3_color',true) ?: self::DEFAULT_COLOR;
         $page = (int)get_post_meta($post->ID,'_wpnp3_page',true);
         ?>
         <p><strong><?php esc_html_e('Background color','wpnp-center'); ?></strong></p>
@@ -70,6 +75,10 @@ class WPNP_Center {
     }
 
     public function render_visibility_box($post){
+        if (!current_user_can('edit_post', $post->ID)) {
+            return;
+        }
+
         wp_nonce_field('wpnp3_save_visibility','wpnp3_vis_nonce');
         $is_public = get_post_meta($post->ID,'_wpnp3_is_public',true) === '1';
         $shared = get_post_meta($post->ID,'_wpnp3_shared_users',true);
@@ -96,7 +105,7 @@ class WPNP_Center {
         if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
         if(!current_user_can('edit_post',$post_id)) return;
 
-        $color = isset($_POST['wpnp3_color']) ? sanitize_hex_color($_POST['wpnp3_color']) : '#ffeb3b';
+        $color = isset($_POST['wpnp3_color']) ? sanitize_hex_color($_POST['wpnp3_color']) : self::DEFAULT_COLOR;
         update_post_meta($post_id,'_wpnp3_color',$color);
 
         $page = isset($_POST['wpnp3_page']) ? (int)$_POST['wpnp3_page'] : 0;
@@ -172,8 +181,13 @@ class WPNP_Center {
             'post_type'=> self::CPT,
             'numberposts'=> -1,
             'post_status'=> ['publish','private','draft'],
-            'meta_key'=> '_wpnp3_page',
-            'meta_value'=> $page_id
+            'meta_query' => [
+                [
+                    'key' => '_wpnp3_page',
+                    'value' => $page_id,
+                    'compare' => '='
+                ]
+            ]
         ]);
         if(!$notes) return;
 
@@ -192,6 +206,10 @@ class WPNP_Center {
         }
         if(!$visible) return;
 
+        // Batch load all meta data for visible notes to reduce queries
+        $note_ids = wp_list_pluck($visible, 'ID');
+        update_meta_cache('post', $note_ids);
+
         echo '<script>window.wpnp3NotesPayload = window.wpnp3NotesPayload || [];</script>';
         foreach($visible as $n){
             $id=$n->ID;
@@ -199,7 +217,7 @@ class WPNP_Center {
                 'id'=>$id,
                 'title'=> get_the_title($n),
                 'content'=> wpautop( wp_kses_post($n->post_content) ),
-                'color'=> get_post_meta($id,'_wpnp3_color',true) ?: '#ffeb3b',
+                'color'=> get_post_meta($id,'_wpnp3_color',true) ?: self::DEFAULT_COLOR,
                 'author'=> (int)$n->post_author,
                 // center-anchored coords
                 'cx'=> metadata_exists('post',$id,'_wpnp3_cx') ? floatval(get_post_meta($id,'_wpnp3_cx',true)) : null,
@@ -242,7 +260,7 @@ class WPNP_Center {
 
     public function fix_admin_counts($views) {
         // Only run for our CPT
-        if (!isset($_GET['post_type']) || $_GET['post_type'] !== self::CPT) {
+        if (!isset($_GET['post_type']) || sanitize_key($_GET['post_type']) !== self::CPT) {
             return $views;
         }
 
