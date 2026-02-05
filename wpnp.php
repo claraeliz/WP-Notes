@@ -6,7 +6,9 @@
  * Author: Clara Muranyi
  * Text Domain: wpnp-center
  */
-if ( ! defined('ABSPATH') ) exit;
+if ( ! defined('ABSPATH') ) {
+    exit; // exit if accesed directly
+}
 
 class WPNP_Center {
     const CPT = 'wpnp_note3'; // NEW CPT + meta keys
