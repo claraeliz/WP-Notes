@@ -7,7 +7,7 @@
  * Text Domain: wpnp-center
  */
 if ( ! defined('ABSPATH') ) {
-    exit; // exit if accesed directly
+    exit; // exit if accessed directly
 }
 
 class WPNP_Center {
